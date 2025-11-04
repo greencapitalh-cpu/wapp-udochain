@@ -1,85 +1,47 @@
-// src/context/AuthContext.tsx
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-  useMemo,
-  ReactNode,
-} from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import useApi from "../hooks/useApi";
 
-type User = {
-  _id?: string;
-  username?: string;
-  email?: string;
-  credits?: number;
-};
+const AuthContext = createContext(null);
 
-type AuthContextType = {
-  token: string | null;
-  user: User | null;
-  loading: boolean;
-  login: (t: string, u?: User | null) => void;
-  logout: () => void;
-  setUser: (u: User | null) => void;
-};
-
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
-
-export function AuthProvider({ children }: { children: ReactNode }) {
-  const [token, setToken] = useState<string | null>(() =>
-    localStorage.getItem("token")
-  );
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+export function AuthProvider({ children }) {
   const { get } = useApi();
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  // ✅ Verifica el token y obtiene /me al cargar
   useEffect(() => {
-    const fetchUser = async () => {
-      if (!token) {
-        setUser(null);
-        setLoading(false);
-        return;
-      }
+    const params = new URLSearchParams(window.location.search);
+    const tokenFromUrl = params.get("token");
+
+    // Si viene desde app, lo guarda
+    if (tokenFromUrl) {
+      localStorage.setItem("token", tokenFromUrl);
+      window.history.replaceState({}, "", window.location.pathname);
+    }
+
+    const token = localStorage.getItem("token");
+    if (!token) {
+      window.location.href = "https://app.udochain.com/login";
+      return;
+    }
+
+    (async () => {
       try {
-        const me = await get<User>("/api/auth/me");
-        setUser(me || null);
-      } catch (err) {
-        console.warn("⚠️ Sesión inválida:", err);
+        const me = await get("/api/auth/me");
+        setUser(me);
+      } catch {
         localStorage.removeItem("token");
-        setUser(null);
+        window.location.href = "https://app.udochain.com/login";
       } finally {
         setLoading(false);
       }
-    };
-    fetchUser();
-  }, [token]);
+    })();
+  }, []);
 
-  const login = (t: string, u?: User | null) => {
-    localStorage.setItem("token", t);
-    setToken(t);
-    if (u) setUser(u);
-  };
-
-  const logout = () => {
-    localStorage.removeItem("token");
-    setToken(null);
-    setUser(null);
-  };
-
-  const value = useMemo(
-    () => ({ token, user, loading, login, logout, setUser }),
-    [token, user, loading]
+  return (
+    <AuthContext.Provider value={{ user, loading }}>
+      {children}
+    </AuthContext.Provider>
   );
-
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
-export function useAuth() {
-  const ctx = useContext(AuthContext);
-  if (!ctx)
-    throw new Error("useAuth must be used inside an AuthProvider");
-  return ctx;
-}
+export const useAuth = () => useContext(AuthContext);
