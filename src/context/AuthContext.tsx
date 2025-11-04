@@ -1,23 +1,19 @@
-// app-udochain/src/context/AuthContext.tsx
+// src/context/AuthContext.tsx
 import {
   createContext,
   useContext,
   useEffect,
-  useMemo,
   useState,
+  useMemo,
   ReactNode,
 } from "react";
 import useApi from "../hooks/useApi";
 
 type User = {
   _id?: string;
-  username?: string;   // ✅ nuevo
-  name?: string;       // se llenará en biometría base
+  username?: string;
   email?: string;
   credits?: number;
-  biometricReady?: boolean;
-  idBase?: string | null;
-  idVerifiedAt?: string | null;
 };
 
 type AuthContextType = {
@@ -39,24 +35,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState<boolean>(true);
   const { get } = useApi();
 
+  // ✅ Verifica el token y obtiene /me al cargar
   useEffect(() => {
-    (async () => {
+    const fetchUser = async () => {
+      if (!token) {
+        setUser(null);
+        setLoading(false);
+        return;
+      }
       try {
-        if (!token) {
-          setUser(null);
-          return;
-        }
         const me = await get<User>("/api/auth/me");
         setUser(me || null);
-      } catch {
+      } catch (err) {
+        console.warn("⚠️ Sesión inválida:", err);
         localStorage.removeItem("token");
-        setToken(null);
         setUser(null);
       } finally {
         setLoading(false);
       }
-    })();
-  }, [token]); // eslint-disable-line
+    };
+    fetchUser();
+  }, [token]);
 
   const login = (t: string, u?: User | null) => {
     localStorage.setItem("token", t);
@@ -80,6 +79,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
 export function useAuth() {
   const ctx = useContext(AuthContext);
-  if (!ctx) throw new Error("useAuth must be used within AuthProvider");
+  if (!ctx)
+    throw new Error("useAuth must be used inside an AuthProvider");
   return ctx;
 }
