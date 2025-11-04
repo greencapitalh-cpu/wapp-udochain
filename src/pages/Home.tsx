@@ -1,6 +1,5 @@
 // src/pages/Home.tsx
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
 import Button from "../ui/Button";
 import DashboardLayout from "../shared/DashboardLayout";
 
@@ -14,7 +13,7 @@ export default function Home() {
         transition={{ duration: 0.6 }}
       >
         <img
-          src="/logo-udochain.png"
+          src="/src/assets/logo-udochain.png"
           alt="UDoChain Logo"
           className="w-24 h-24 mb-6 drop-shadow-lg"
         />
