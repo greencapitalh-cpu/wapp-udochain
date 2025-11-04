@@ -1,71 +1,79 @@
-// ✅ src/pages/Dashboard.tsx — versión limpia sin bloqueos, integrada con DashboardLayout y Header
-export default function Dashboard() {
-  const mainCards = [
-    {
-      title: "Validate",
-      desc: "Verifica la autenticidad de tus documentos o datos.",
-      href: "https://wapp.udochain.com",
-    },
-    {
-      title: "Sign",
-      desc: "Firma documentos electrónicamente y gestiona tus contratos.",
-      href: "https://wapp.udochain.com",
-    },
-    {
-      title: "Vote",
-      desc: "Participa en decisiones votando con identidad validada.",
-      href: "https://wapp.udochain.com",
-    },
-    {
-      title: "Trace",
-      desc: "Rastrea y audita la trazabilidad de tus evidencias.",
-      href: "https://wapp.udochain.com",
-    },
-  ];
+// src/pages/Home.tsx
+import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
+import Button from "../ui/Button";
+import DashboardLayout from "../shared/DashboardLayout";
 
-  const secondaryCards = [
-    { title: "Verify evidence", href: "https://wapp.udochain.com" },
-    { title: "Enroll identity", href: "https://wapp.udochain.com" },
-  ];
-
+export default function Home() {
   return (
-    <>
-      <meta name="robots" content="noindex, nofollow" />
+    <DashboardLayout>
+      <motion.div
+        className="text-center flex flex-col items-center justify-center py-16 space-y-10"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+      >
+        <img
+          src="/logo-udochain.png"
+          alt="UDoChain Logo"
+          className="w-24 h-24 mb-6 drop-shadow-lg"
+        />
 
-      <main className="flex-1 container-narrow px-4 py-10">
-        <h1 className="text-3xl font-bold mb-8 text-center text-udo-primary">
-          UDoChain Dashboard
-        </h1>
-
-        {/* 🔹 Cuadros principales */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-10">
-          {mainCards.map(({ title, desc, href }) => (
-            <a
-              key={title}
-              href={href}
-              className="block p-6 border border-slate-200 rounded-2xl shadow-md hover:shadow-lg transition-all hover:-translate-y-1 bg-white"
-            >
-              <h2 className="text-xl font-semibold mb-2 text-udo-primary">
-                {title}
-              </h2>
-              <p className="text-sm text-udo-steel leading-snug">{desc}</p>
-            </a>
-          ))}
+        <div>
+          <h1 className="text-3xl font-bold text-udo-primary mb-3">
+            Welcome to UDoChain Hub
+          </h1>
+          <p className="text-udo-steel max-w-md mx-auto">
+            Access all your blockchain-powered modules in one place.
+          </p>
         </div>
 
-        {/* 🔹 Cuadros secundarios */}
-        <div className="flex flex-col sm:flex-row justify-center gap-4">
-          {secondaryCards.map(({ title, href }) => (
-            <a
-              key={title}
-              href={href}
-              className="flex-1 p-4 text-center border border-slate-200 rounded-xl shadow-sm hover:shadow-md transition-all bg-white font-medium hover:-translate-y-0.5"
-            >
-              {title}
-            </a>
-          ))}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
+          <a
+            href="https://app.udochain.com/validate"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Button className="w-full py-4 text-lg">Validate</Button>
+          </a>
+
+          <a
+            href="https://app.udochain.com/sign"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Button className="w-full py-4 text-lg">Sign</Button>
+          </a>
+
+          <a
+            href="https://app.udochain.com/vote"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Button className="w-full py-4 text-lg">Vote</Button>
+          </a>
+
+          <a
+            href="https://app.udochain.com/trace"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Button className="w-full py-4 text-lg">Trace</Button>
+          </a>
         </div>
-      </main>
-    </>
+
+        <div className="mt-12 text-sm text-udo-steel">
+          Already have an account?{" "}
+          <a
+            href="https://app.udochain.com/login"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-udo-primary hover:underline"
+          >
+            Log in at app.udochain.com
+          </a>
+        </div>
+      </motion.div>
+    </DashboardLayout>
   );
 }
