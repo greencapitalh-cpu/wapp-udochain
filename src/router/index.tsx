@@ -1,18 +1,22 @@
-// src/router/index.tsx
 import { createBrowserRouter } from "react-router-dom";
 import RootLayout from "../shared/RootLayout";
 import DashboardLayout from "../shared/DashboardLayout";
 import Home from "../pages/Home";
+import PrivateRoute from "../shared/PrivateRoute";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <RootLayout />, // envuelve con AuthProvider
+    element: <RootLayout />,
     children: [
       {
-        element: <DashboardLayout />, // usa tu layout con header y footer
+        element: (
+          <PrivateRoute>
+            <DashboardLayout />
+          </PrivateRoute>
+        ),
         children: [
-          { index: true, element: <Home /> }, // página principal
+          { index: true, element: <Home /> },
         ],
       },
     ],
