@@ -7,19 +7,14 @@ import Home from "../pages/Home";
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <RootLayout />,
+    element: <RootLayout />, // envuelve con AuthProvider
     children: [
       {
-        index: true,
-        element: (
-          <DashboardLayout>
-            <Home />
-          </DashboardLayout>
-        ),
+        element: <DashboardLayout />, // usa tu layout con header y footer
+        children: [
+          { index: true, element: <Home /> }, // página principal
+        ],
       },
-      // 🔹 Aquí podrás agregar futuras rutas internas si lo deseas:
-      // { path: "dashboard", element: <DashboardLayout><Dashboard /></DashboardLayout> },
-      // { path: "validate", element: <Validate /> },
     ],
   },
 ]);
