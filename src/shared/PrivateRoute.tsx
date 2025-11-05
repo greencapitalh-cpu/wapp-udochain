@@ -1,3 +1,8 @@
+// =======================================================
+// 🔒 WAPP-AUTH — PrivateRoute.tsx
+// Bloquea el acceso directo a rutas sin token válido
+// =======================================================
+
 import { useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 
