@@ -1,6 +1,6 @@
 // =======================================================
-// 🔒 WAPP-AUTH — useApi.ts
-// Cliente API con headers dinámicos de autenticación
+// 🔒 WAPP-AUTH — useApi.ts (versión extendida con opciones)
+// Cliente API con headers dinámicos y soporte de AbortController / logs
 // =======================================================
 
 type Json = Record<string, any>;
@@ -23,29 +23,46 @@ export default function useApi() {
     }
     if (!res.ok) {
       const msg = data?.message || res.statusText || "Request failed";
+      console.error("❌ API error:", msg);
       throw new Error(msg);
     }
     return data as T;
   };
 
-  const get = async <T = any>(path: string): Promise<T> => {
+  // 🔹 Método GET con soporte de signal / opciones
+  const get = async <T = any>(
+    path: string,
+    options: RequestInit = {}
+  ): Promise<T> => {
     const token = localStorage.getItem("token");
     const res = await fetch(url(path), {
       method: "GET",
-      headers: token ? { Authorization: `Bearer ${token}` } : {},
+      headers: {
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        ...options.headers,
+      },
+      credentials: "include",
+      ...options,
     });
     return handle<T>(res);
   };
 
-  const postJson = async <T = any>(path: string, body?: Json): Promise<T> => {
+  const postJson = async <T = any>(
+    path: string,
+    body?: Json,
+    options: RequestInit = {}
+  ): Promise<T> => {
     const token = localStorage.getItem("token");
     const res = await fetch(url(path), {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        ...options.headers,
       },
+      credentials: "include",
       body: body ? JSON.stringify(body) : undefined,
+      ...options,
     });
     return handle<T>(res);
   };
