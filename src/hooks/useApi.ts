@@ -1,10 +1,12 @@
-// src/hooks/useApi.ts
+// =======================================================
+// 🔒 WAPP-AUTH — useApi.ts
+// Cliente API con headers dinámicos de autenticación
+// =======================================================
+
 type Json = Record<string, any>;
 
 export default function useApi() {
-  // URL base para llamadas a tu API de producción
-  const base =
-    import.meta.env.VITE_API_URL || "https://api.udochain.com/api";
+  const base = import.meta.env.VITE_API_URL || "https://api.udochain.com/api";
 
   const url = (path: string) =>
     path.startsWith("http")
