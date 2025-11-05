@@ -1,10 +1,14 @@
-import { Link, useNavigate } from "react-router-dom";
+// =======================================================
+// 🔒 WAPP-AUTH — DashboardHeader.tsx
+// Encabezado con navegación y logout global del contexto
+// =======================================================
+
+import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import logoPath from "../assets/logo-udochain.png";
 
 export default function DashboardHeader() {
   const { user, logout } = useAuth();
-  const navigate = useNavigate();
 
   const nav: [string, string][] = [
     ["Dashboard", "/dashboard"],
@@ -42,10 +46,7 @@ export default function DashboardHeader() {
             {user?.username || user?.email || "Usuario"}
           </span>
           <button
-            onClick={() => {
-              logout();
-              navigate("/login");
-            }}
+            onClick={logout}
             className="px-3 py-1 rounded-lg bg-udo-primary text-white hover:bg-udo-ink text-sm sm:text-base"
           >
             Logout
