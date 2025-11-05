@@ -1,3 +1,8 @@
+// =======================================================
+// 🔒 WAPP-AUTH — router/index.tsx
+// Estructura de rutas protegidas del WAPP
+// =======================================================
+
 import { createBrowserRouter } from "react-router-dom";
 import RootLayout from "../shared/RootLayout";
 import DashboardLayout from "../shared/DashboardLayout";
