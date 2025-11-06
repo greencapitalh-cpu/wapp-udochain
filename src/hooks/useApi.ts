@@ -1,6 +1,6 @@
 // =======================================================
-// 🔒 WAPP-AUTH — useApi.ts (versión extendida con opciones)
-// Cliente API con headers dinámicos y soporte de AbortController / logs
+// 🔒 WAPP-AUTH — useApi.ts (v2.1 final estable)
+// Cliente API con headers dinámicos y soporte completo de opciones
 // =======================================================
 
 type Json = Record<string, any>;
@@ -29,11 +29,8 @@ export default function useApi() {
     return data as T;
   };
 
-  // 🔹 Método GET con soporte de signal / opciones
-  const get = async <T = any>(
-    path: string,
-    options: RequestInit = {}
-  ): Promise<T> => {
+  // ✅ Método GET mejorado con opciones (signal, headers, credentials, etc.)
+  const get = async <T = any>(path: string, options: RequestInit = {}): Promise<T> => {
     const token = localStorage.getItem("token");
     const res = await fetch(url(path), {
       method: "GET",
@@ -47,6 +44,7 @@ export default function useApi() {
     return handle<T>(res);
   };
 
+  // ✅ POST JSON con soporte de opciones
   const postJson = async <T = any>(
     path: string,
     body?: Json,
