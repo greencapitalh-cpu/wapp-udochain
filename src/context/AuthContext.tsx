@@ -1,7 +1,6 @@
 // =======================================================
-// 🔒 WAPP-AUTH — AuthContext.tsx (versión reforzada con logs y control de flujo)
-// Gestiona la sesión local en wapp.udochain.com
-// Captura ?token= desde app.udochain.com y valida con /api/auth/me
+// 🔒 WAPP-AUTH — AuthContext.tsx (v2.1 final estable)
+// Gestión completa de sesión y validación entre dominios
 // =======================================================
 
 import { createContext, useContext, useEffect, useState } from "react";
@@ -20,45 +19,42 @@ export function AuthProvider({ children }) {
       console.log("🔹 [Auth] Starting token validation...");
 
       try {
-        // 1️⃣ Captura token desde la URL si viene desde APP
+        // 1️⃣ Captura token de la URL si viene desde APP
         const params = new URLSearchParams(window.location.search);
         const tokenFromUrl = params.get("token");
 
         if (tokenFromUrl) {
           localStorage.setItem("token", tokenFromUrl);
           setToken(tokenFromUrl);
-          console.log("✅ [Auth] Token captured from URL:", tokenFromUrl);
-          // Limpia el token de la barra del navegador
+          console.log("✅ [Auth] Token captured from URL");
           window.history.replaceState({}, "", window.location.pathname);
         }
 
         // 2️⃣ Recupera token local
         const localToken = tokenFromUrl || localStorage.getItem("token");
         if (!localToken) {
-          console.warn("⚠️ [Auth] No token found. Redirecting to APP login...");
+          console.warn("⚠️ [Auth] No token found → redirecting to APP login");
           window.location.href = "https://app.udochain.com/login";
           return;
         }
-
         setToken(localToken);
-        console.log("🧩 [Auth] Validating token with API...");
 
         // 3️⃣ Valida token con backend
         const controller = new AbortController();
         const timeout = setTimeout(() => controller.abort(), 10000);
+        console.log("🧩 [Auth] Validating /api/auth/me ...");
 
         const me = await get("/api/auth/me", { signal: controller.signal });
         clearTimeout(timeout);
 
-        console.log("✅ [Auth] Validation successful:", me);
-
-        if (!me || !me._id) throw new Error("Invalid user response");
+        if (!me || !me._id) throw new Error("Invalid /me response");
         setUser(me);
+        console.log("✅ [Auth] Validation OK:", me.email);
       } catch (err: any) {
         console.error("❌ [Auth] Validation failed:", err.message);
-        // 🚫 No eliminar el token de inmediato (solo para depuración controlada)
-        localStorage.setItem("lastAuthError", err.message || "Unknown");
-        // Se mantiene el token para revisión posterior
+        localStorage.removeItem("token");
+        setUser(null);
+        setToken(null);
         window.location.href = "https://app.udochain.com/login";
       } finally {
         setLoading(false);
