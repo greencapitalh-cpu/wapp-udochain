@@ -1,6 +1,3 @@
-// =======================================================
-// 🔐 WAPP — AuthContext.tsx (versión estable final)
-// =======================================================
 import { createContext, useContext, useEffect, useState } from "react";
 import useApi from "../hooks/useApi";
 
