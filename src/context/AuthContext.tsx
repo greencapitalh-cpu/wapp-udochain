@@ -1,8 +1,6 @@
 // =======================================================
-// 🔒 WAPP-AUTH — AuthContext.tsx (v2.1 final estable)
-// Gestión completa de sesión y validación entre dominios
+// 🔐 WAPP — AuthContext.tsx (versión estable final)
 // =======================================================
-
 import { createContext, useContext, useEffect, useState } from "react";
 import useApi from "../hooks/useApi";
 
@@ -16,46 +14,45 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     (async () => {
-      console.log("🔹 [Auth] Starting token validation...");
+      console.log("🔹 [Auth] Iniciando validación en WAPP...");
 
+      // 1️⃣ Buscar token desde URL o localStorage
+      const params = new URLSearchParams(window.location.search);
+      const tokenFromUrl = params.get("token");
+      const storedToken = localStorage.getItem("token");
+
+      let activeToken = tokenFromUrl || storedToken;
+
+      if (tokenFromUrl) {
+        console.log("✅ [Auth] Token recibido por URL:", tokenFromUrl);
+        localStorage.setItem("token", tokenFromUrl);
+        window.history.replaceState({}, "", window.location.pathname);
+      } else if (storedToken) {
+        console.log("🧩 [Auth] Token existente en localStorage.");
+      } else {
+        console.warn("⚠️ [Auth] No hay token disponible (ni URL ni localStorage).");
+      }
+
+      // 2️⃣ Si no hay token, mostrar login (sin redirigir de inmediato)
+      if (!activeToken) {
+        setLoading(false);
+        setUser(null);
+        return;
+      }
+
+      setToken(activeToken);
+
+      // 3️⃣ Intentar validar el token con el backend
       try {
-        // 1️⃣ Captura token de la URL si viene desde APP
-        const params = new URLSearchParams(window.location.search);
-        const tokenFromUrl = params.get("token");
-
-        if (tokenFromUrl) {
-          localStorage.setItem("token", tokenFromUrl);
-          setToken(tokenFromUrl);
-          console.log("✅ [Auth] Token captured from URL");
-          window.history.replaceState({}, "", window.location.pathname);
-        }
-
-        // 2️⃣ Recupera token local
-        const localToken = tokenFromUrl || localStorage.getItem("token");
-        if (!localToken) {
-          console.warn("⚠️ [Auth] No token found → redirecting to APP login");
-          window.location.href = "https://app.udochain.com/login";
-          return;
-        }
-        setToken(localToken);
-
-        // 3️⃣ Valida token con backend
-        const controller = new AbortController();
-        const timeout = setTimeout(() => controller.abort(), 10000);
-        console.log("🧩 [Auth] Validating /api/auth/me ...");
-
-        const me = await get("/api/auth/me", { signal: controller.signal });
-        clearTimeout(timeout);
-
-        if (!me || !me._id) throw new Error("Invalid /me response");
+        console.log("🧩 [Auth] Validando token con /api/auth/me ...");
+        const me = await get("/api/auth/me");
+        if (!me || !me._id) throw new Error("Respuesta inválida de usuario");
+        console.log("✅ [Auth] Usuario autenticado:", me.email);
         setUser(me);
-        console.log("✅ [Auth] Validation OK:", me.email);
       } catch (err: any) {
-        console.error("❌ [Auth] Validation failed:", err.message);
+        console.error("❌ [Auth] Token inválido o expirado:", err.message);
         localStorage.removeItem("token");
         setUser(null);
-        setToken(null);
-        window.location.href = "https://app.udochain.com/login";
       } finally {
         setLoading(false);
       }
