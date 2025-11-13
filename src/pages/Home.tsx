@@ -8,7 +8,7 @@ import Footer from "../ui/Footer";
 import useAutoTranslate from "../hooks/useAutoTranslate";
 
 export default function Home() {
-  // 🌍 Detecta idioma del navegador y traduce automáticamente
+  // 🌍 Detecta idioma del navegador y traduce automáticamente (sin tocar el branding)
   useAutoTranslate();
 
   const { user, loading } = useAuth();
@@ -68,13 +68,21 @@ export default function Home() {
       <main className="flex-1 container mx-auto px-6 py-12">
         {/* 🏁 Encabezado principal */}
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-udo-primary mb-2">
+          <h1
+            className="text-4xl font-bold text-udo-primary mb-2 notranslate"
+            translate="no"
+          >
             UDoChain Hub
           </h1>
           <p className="text-udo-steel mb-4">
             Welcome, <strong>{user.email}</strong>
           </p>
-          <p className="text-sm text-gray-500 italic">You do. We validate.</p>
+          <p
+            className="text-sm text-gray-500 italic notranslate"
+            translate="no"
+          >
+            You do. We validate.
+          </p>
         </div>
 
         {/* 🧩 Tarjetas principales (4 grandes) */}
@@ -130,4 +138,4 @@ export default function Home() {
       <Footer />
     </div>
   );
-}
+      }
