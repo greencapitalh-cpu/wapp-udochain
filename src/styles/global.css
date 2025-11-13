@@ -9,3 +9,6 @@ body {
 .container {
   @apply max-w-7xl mx-auto;
 }
+.notranslate {
+  translate: none !important;
+}
