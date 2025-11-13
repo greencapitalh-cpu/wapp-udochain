@@ -8,74 +8,76 @@ import Footer from "../ui/Footer";
 import useAutoTranslate from "../hooks/useAutoTranslate";
 
 export default function Home() {
+  // 🌍 Detecta idioma del navegador y traduce automáticamente
   useAutoTranslate();
-  const { user, loading } = useAuth();
 
+  const { user, loading } = useAuth();
   if (loading) return <Loader />;
   if (!user) return null;
 
   const token = localStorage.getItem("token") || "";
 
-  // 🧭 Lista de módulos activos del ecosistema
+  // 🧭 Módulos principales del ecosistema UDoChain
   const mainModules = [
     {
       name: "Validate",
       url: `https://validate.udochain.com/?token=${token}`,
-      desc: "Validate and certify documents on blockchain",
+      desc: "Validate and certify documents on blockchain.",
     },
     {
       name: "Sign",
       url: `https://sign.udochain.com/?token=${token}`,
-      desc: "Invite users to sign securely with BioID or e-signature",
+      desc: "Invite users to sign securely with BioID or e-signature.",
     },
     {
       name: "Trace",
       url: `https://trace.udochain.com/?token=${token}`,
-      desc: "Track and verify digital processes",
+      desc: "Track and verify digital processes and records.",
     },
     {
       name: "Vote",
       url: `https://vote.udochain.com/?token=${token}`,
-      desc: "Create and manage blockchain voting events",
+      desc: "Create and manage blockchain voting events.",
     },
   ];
 
+  // ⚙️ Módulos secundarios o de soporte
   const extraModules = [
     {
       name: "Verify",
       url: `https://verify.udochain.com/?token=${token}`,
-      desc: "Check authenticity of any certificate or proof",
+      desc: "Check authenticity of any certificate or proof.",
     },
     {
       name: "Pay",
       url: `https://pay.udochain.com/?token=${token}`,
-      desc: "Manage payments, credits, and subscription plans",
+      desc: "Manage payments, credits, and subscription plans.",
     },
     {
       name: "BioID",
       url: `https://bioid.udochain.com/?token=${token}`,
-      desc: "Authenticate and manage biometric identities",
+      desc: "Authenticate and manage biometric identities.",
     },
   ];
 
   return (
     <div className="min-h-screen flex flex-col bg-udo-bg text-gray-900">
+      {/* 🔹 Header global */}
       <Header user={user} />
+
       <main className="flex-1 container mx-auto px-6 py-12">
-        {/* 🔹 Encabezado */}
-        <div className="text-center mb-10">
+        {/* 🏁 Encabezado principal */}
+        <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-udo-primary mb-2">
             UDoChain Hub
           </h1>
           <p className="text-udo-steel mb-4">
             Welcome, <strong>{user.email}</strong>
           </p>
-          <p className="text-sm text-gray-500 italic">
-            You do. We validate.
-          </p>
+          <p className="text-sm text-gray-500 italic">You do. We validate.</p>
         </div>
 
-        {/* 🧩 Tarjetas principales */}
+        {/* 🧩 Tarjetas principales (4 grandes) */}
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 max-w-6xl mx-auto">
           {mainModules.map((m) => (
             <a
@@ -91,8 +93,8 @@ export default function Home() {
           ))}
         </div>
 
-        {/* 🧩 Tarjetas pequeñas */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-10 max-w-5xl mx-auto">
+        {/* 🧩 Tarjetas secundarias (3 pequeñas) */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-12 max-w-5xl mx-auto">
           {extraModules.map((m) => (
             <a
               key={m.name}
@@ -107,8 +109,8 @@ export default function Home() {
           ))}
         </div>
 
-        {/* 🔘 Botones CTA */}
-        <div className="flex flex-col sm:flex-row justify-center gap-4 mt-12">
+        {/* 🔘 Botones finales (CTA) */}
+        <div className="flex flex-col sm:flex-row justify-center gap-4 mt-14">
           <a
             href={`https://verify.udochain.com/?token=${token}`}
             className="bg-udo-primary text-white py-3 px-8 rounded-xl font-medium hover:bg-blue-700 transition"
@@ -123,6 +125,8 @@ export default function Home() {
           </a>
         </div>
       </main>
+
+      {/* 🔹 Footer global */}
       <Footer />
     </div>
   );
