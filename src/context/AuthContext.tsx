@@ -1,9 +1,9 @@
 import { createContext, useContext, useEffect, useState } from "react";
 
-const AuthContext = createContext(null);
+const AuthContext = createContext<any>(null);
 
-export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null);
+export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const [user, setUser] = useState<any>(null);
   const [token, setToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -20,25 +20,22 @@ export function AuthProvider({ children }) {
       }
 
       if (!activeToken) {
-        setLoading(false);
+        window.location.href = "https://app.udochain.com";
         return;
       }
 
       setToken(activeToken);
+
       try {
         const res = await fetch(`${import.meta.env.VITE_API_URL}/auth/me`, {
-          method: "GET",
-          headers: { Authorization: `Bearer ${activeToken}` }
+          headers: { Authorization: `Bearer ${activeToken}` },
         });
-
         if (!res.ok) throw new Error("Invalid token");
-
         const me = await res.json();
         setUser(me);
-      } catch (err) {
-        console.error("Auth error:", err);
+      } catch {
         localStorage.removeItem("token");
-        setUser(null);
+        window.location.href = "https://app.udochain.com";
       } finally {
         setLoading(false);
       }
