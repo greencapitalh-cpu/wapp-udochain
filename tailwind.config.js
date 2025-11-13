@@ -4,11 +4,14 @@ export default {
   theme: {
     extend: {
       colors: {
-        "udo-primary": "#0044ff",
-        "udo-steel": "#6b7280",
-        "udo-bg": "#f9fafb"
-      }
-    }
+        "udo-primary": "#184B8C",
+        "udo-steel": "#6B7A90",
+        "udo-bg": "#F9FAFB",
+      },
+      boxShadow: {
+        soft: "0 4px 14px rgba(0,0,0,0.06)",
+      },
+    },
   },
-  plugins: []
+  plugins: [],
 };
