@@ -55,8 +55,8 @@ export default function Home() {
     },
     {
       name: "BioID",
-      url: `https://bioid.udochain.com/?token=${token}`,
-      desc: "Authenticate and manage biometric identities.",
+      url: `https://bioid.udochain.com/profile?token=${token}&from=dashboard`,
+      desc: "Manage and enroll your biometric identity profile.",
     },
   ];
 
@@ -138,4 +138,4 @@ export default function Home() {
       <Footer />
     </div>
   );
-      }
+}
