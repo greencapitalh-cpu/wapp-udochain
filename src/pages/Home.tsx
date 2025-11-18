@@ -1,5 +1,5 @@
 // =======================================================
-// 🌐 WAPP — Home.tsx (UDoChain Hub principal)
+// 🌐 WAPP — Home.tsx (UDoChain Hub principal, versión integrada con Validate.Verify)
 // =======================================================
 import { useAuth } from "../context/AuthContext";
 import Loader from "../ui/Loader";
@@ -8,16 +8,13 @@ import Footer from "../ui/Footer";
 import useAutoTranslate from "../hooks/useAutoTranslate";
 
 export default function Home() {
-  // 🌍 Detecta idioma del navegador y traduce automáticamente (sin tocar el branding)
   useAutoTranslate();
-
   const { user, loading } = useAuth();
   if (loading) return <Loader />;
   if (!user) return null;
 
   const token = localStorage.getItem("token") || "";
 
-  // 🧭 Módulos principales del ecosistema UDoChain
   const mainModules = [
     {
       name: "Validate",
@@ -41,11 +38,11 @@ export default function Home() {
     },
   ];
 
-  // ⚙️ Módulos secundarios o de soporte
   const extraModules = [
     {
       name: "Verify",
-      url: `https://verify.udochain.com/?token=${token}`,
+      // ✅ redirige al verify dentro de Validate
+      url: `https://validate.udochain.com/verify?token=${token}`,
       desc: "Check authenticity of any certificate or proof.",
     },
     {
@@ -62,11 +59,8 @@ export default function Home() {
 
   return (
     <div className="min-h-screen flex flex-col bg-udo-bg text-gray-900">
-      {/* 🔹 Header global */}
       <Header user={user} />
-
       <main className="flex-1 container mx-auto px-6 py-12">
-        {/* 🏁 Encabezado principal */}
         <div className="text-center mb-12">
           <h1
             className="text-4xl font-bold text-udo-primary mb-2 notranslate"
@@ -85,7 +79,7 @@ export default function Home() {
           </p>
         </div>
 
-        {/* 🧩 Tarjetas principales (4 grandes) */}
+        {/* 🧩 Tarjetas principales */}
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 max-w-6xl mx-auto">
           {mainModules.map((m) => (
             <a
@@ -101,7 +95,7 @@ export default function Home() {
           ))}
         </div>
 
-        {/* 🧩 Tarjetas secundarias (3 pequeñas) */}
+        {/* 🧩 Tarjetas secundarias */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-12 max-w-5xl mx-auto">
           {extraModules.map((m) => (
             <a
@@ -117,10 +111,10 @@ export default function Home() {
           ))}
         </div>
 
-        {/* 🔘 Botones finales (CTA) */}
+        {/* 🔘 CTA final */}
         <div className="flex flex-col sm:flex-row justify-center gap-4 mt-14">
           <a
-            href={`https://verify.udochain.com/?token=${token}`}
+            href={`https://validate.udochain.com/verify?token=${token}`}
             className="bg-udo-primary text-white py-3 px-8 rounded-xl font-medium hover:bg-blue-700 transition"
           >
             Verify Certificates
@@ -133,8 +127,6 @@ export default function Home() {
           </a>
         </div>
       </main>
-
-      {/* 🔹 Footer global */}
       <Footer />
     </div>
   );
