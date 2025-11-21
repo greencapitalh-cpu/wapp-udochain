@@ -19,6 +19,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         window.history.replaceState({}, "", window.location.pathname);
       }
 
+      // 🔒 Si no hay token, volver al login principal
       if (!activeToken) {
         window.location.href = "https://app.udochain.com";
         return;
@@ -27,14 +28,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setToken(activeToken);
 
       try {
+        // 🧩 Obtener información del usuario desde el backend
         const res = await fetch(`${import.meta.env.VITE_API_URL}/auth/me`, {
           headers: { Authorization: `Bearer ${activeToken}` },
         });
+
         if (!res.ok) throw new Error("Invalid token");
+
         const me = await res.json();
         setUser(me);
-      } catch {
+
+        // ✅ Guardar email para los demás módulos (Validate, BioID, etc.)
+        if (me?.email) {
+          localStorage.setItem("userEmail", me.email);
+        }
+
+      } catch (err) {
+        console.error("❌ Auth error:", err);
         localStorage.removeItem("token");
+        localStorage.removeItem("userEmail");
         window.location.href = "https://app.udochain.com";
       } finally {
         setLoading(false);
