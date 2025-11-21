@@ -1,23 +1,17 @@
-// =======================================================
-// 🧭 Header.tsx — Navegación global actualizada
-// =======================================================
 import logo from "../assets/logo-udochain.png";
 
 export default function Header({ user }: { user: any }) {
   const token = localStorage.getItem("token") || "";
+  const email = user?.email || "";
 
   const links = [
-    { name: "Validate", url: `https://validate.udochain.com/?token=${token}` },
-    { name: "Sign", url: `https://sign.udochain.com/?token=${token}` },
-    { name: "Trace", url: `https://trace.udochain.com/?token=${token}` },
-    { name: "Vote", url: `https://vote.udochain.com/?token=${token}` },
-    // ✅ verify apunta al módulo verify dentro de validate
-    { name: "Verify", url: `https://validate.udochain.com/verify?token=${token}` },
-    { name: "Pay", url: `https://pay.udochain.com/?token=${token}` },
-    {
-      name: "BioID",
-      url: `https://bioid.udochain.com/profile?token=${token}&from=dashboard`,
-    },
+    { name: "Validate", url: `https://validate.udochain.com/?token=${token}&email=${encodeURIComponent(email)}` },
+    { name: "Sign", url: `https://sign.udochain.com/?token=${token}&email=${encodeURIComponent(email)}` },
+    { name: "Trace", url: `https://trace.udochain.com/?token=${token}&email=${encodeURIComponent(email)}` },
+    { name: "Vote", url: `https://vote.udochain.com/?token=${token}&email=${encodeURIComponent(email)}` },
+    { name: "Verify", url: `https://verify.udochain.com/?token=${token}&email=${encodeURIComponent(email)}` },
+    { name: "Pay", url: `https://pay.udochain.com/?token=${token}&email=${encodeURIComponent(email)}` },
+    { name: "BioID", url: `https://bioid.udochain.com/profile?token=${token}&email=${encodeURIComponent(email)}&from=dashboard` },
   ];
 
   return (
@@ -27,7 +21,6 @@ export default function Header({ user }: { user: any }) {
           <img src={logo} alt="UDoChain" className="h-8 w-auto" />
           <span className="font-semibold text-udo-primary text-lg">UDoChain</span>
         </div>
-
         <nav className="hidden md:flex items-center gap-5 text-sm">
           {links.map((l) => (
             <a
@@ -39,7 +32,6 @@ export default function Header({ user }: { user: any }) {
             </a>
           ))}
         </nav>
-
         <div className="text-sm text-gray-500 hidden sm:block">{user?.email}</div>
       </div>
     </header>
