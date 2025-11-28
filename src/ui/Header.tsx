@@ -1,3 +1,6 @@
+// =======================================================
+// 🧭 UDoChain WAPP Header — Updated with Records link
+// =======================================================
 import logo from "../assets/logo-udochain.png";
 
 export default function Header({ user }: { user: any }) {
@@ -10,6 +13,7 @@ export default function Header({ user }: { user: any }) {
     { name: "Trace", url: `https://trace.udochain.com/?token=${token}&email=${encodeURIComponent(email)}` },
     { name: "Vote", url: `https://vote.udochain.com/?token=${token}&email=${encodeURIComponent(email)}` },
     { name: "Verify", url: `https://verify.udochain.com/?token=${token}&email=${encodeURIComponent(email)}` },
+    { name: "Records", url: `https://verify.udochain.com/records?token=${token}&email=${encodeURIComponent(email)}` }, // ✅ agregado
     { name: "Pay", url: `https://pay.udochain.com/?token=${token}&email=${encodeURIComponent(email)}` },
     { name: "BioID", url: `https://bioid.udochain.com/profile?token=${token}&email=${encodeURIComponent(email)}&from=dashboard` },
   ];
