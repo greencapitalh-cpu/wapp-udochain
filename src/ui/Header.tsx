@@ -1,21 +1,23 @@
 // =======================================================
-// 🧭 UDoChain WAPP Header — Records Integrated
+// 🧭 UDoChain WAPP Header — Records Integrated (Final v2)
 // =======================================================
 import logo from "../assets/logo-udochain.png";
 
 export default function Header({ user }: { user: any }) {
-  const token = localStorage.getItem("token") || "";
-  const email = user?.email || "";
+  const token = localStorage.getItem("token")?.trim() || "";
+  const email = encodeURIComponent(user?.email || "");
+
+  const base = (url: string) => `${url}?token=${token}&email=${email}`;
 
   const links = [
-    { name: "Validate", url: `https://validate.udochain.com/?token=${token}&email=${encodeURIComponent(email)}` },
-    { name: "Sign", url: `https://sign.udochain.com/?token=${token}&email=${encodeURIComponent(email)}` },
-    { name: "Trace", url: `https://trace.udochain.com/?token=${token}&email=${encodeURIComponent(email)}` },
-    { name: "Vote", url: `https://vote.udochain.com/?token=${token}&email=${encodeURIComponent(email)}` },
-    { name: "Verify", url: `https://verify.udochain.com/?token=${token}&email=${encodeURIComponent(email)}` },
-    { name: "Records", url: `https://verify.udochain.com/records?token=${token}&email=${encodeURIComponent(email)}` },
-    { name: "Pay", url: `https://pay.udochain.com/?token=${token}&email=${encodeURIComponent(email)}` },
-    { name: "BioID", url: `https://bioid.udochain.com/profile?token=${token}&email=${encodeURIComponent(email)}&from=dashboard` },
+    { name: "Validate", url: base("https://validate.udochain.com/") },
+    { name: "Sign", url: base("https://sign.udochain.com/") },
+    { name: "Trace", url: base("https://trace.udochain.com/") },
+    { name: "Vote", url: base("https://vote.udochain.com/") },
+    { name: "Verify", url: base("https://verify.udochain.com/") },
+    { name: "Records", url: base("https://verify.udochain.com/records") },
+    { name: "Pay", url: base("https://pay.udochain.com/") },
+    { name: "BioID", url: base("https://bioid.udochain.com/profile?from=dashboard") },
   ];
 
   return (
@@ -27,12 +29,18 @@ export default function Header({ user }: { user: any }) {
         </div>
         <nav className="hidden md:flex items-center gap-5 text-sm">
           {links.map((l) => (
-            <a key={l.name} href={l.url} className="text-udo-steel hover:text-udo-primary transition">
+            <a
+              key={l.name}
+              href={l.url}
+              className="text-udo-steel hover:text-udo-primary transition"
+            >
               {l.name}
             </a>
           ))}
         </nav>
-        <div className="text-sm text-gray-500 hidden sm:block">{user?.email}</div>
+        <div className="text-sm text-gray-500 hidden sm:block truncate max-w-[180px]">
+          {user?.email}
+        </div>
       </div>
     </header>
   );
