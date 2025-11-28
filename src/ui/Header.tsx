@@ -1,5 +1,5 @@
 // =======================================================
-// 🧭 UDoChain WAPP Header — Updated with Records link
+// 🧭 UDoChain WAPP Header — Records Integrated
 // =======================================================
 import logo from "../assets/logo-udochain.png";
 
@@ -13,7 +13,7 @@ export default function Header({ user }: { user: any }) {
     { name: "Trace", url: `https://trace.udochain.com/?token=${token}&email=${encodeURIComponent(email)}` },
     { name: "Vote", url: `https://vote.udochain.com/?token=${token}&email=${encodeURIComponent(email)}` },
     { name: "Verify", url: `https://verify.udochain.com/?token=${token}&email=${encodeURIComponent(email)}` },
-    { name: "Records", url: `https://verify.udochain.com/records?token=${token}&email=${encodeURIComponent(email)}` }, // ✅ agregado
+    { name: "Records", url: `https://verify.udochain.com/records?token=${token}&email=${encodeURIComponent(email)}` },
     { name: "Pay", url: `https://pay.udochain.com/?token=${token}&email=${encodeURIComponent(email)}` },
     { name: "BioID", url: `https://bioid.udochain.com/profile?token=${token}&email=${encodeURIComponent(email)}&from=dashboard` },
   ];
@@ -27,11 +27,7 @@ export default function Header({ user }: { user: any }) {
         </div>
         <nav className="hidden md:flex items-center gap-5 text-sm">
           {links.map((l) => (
-            <a
-              key={l.name}
-              href={l.url}
-              className="text-udo-steel hover:text-udo-primary transition"
-            >
+            <a key={l.name} href={l.url} className="text-udo-steel hover:text-udo-primary transition">
               {l.name}
             </a>
           ))}
