@@ -1,5 +1,5 @@
 // =======================================================
-// 🌐 WAPP — Home.tsx (UDoChain Hub principal) v2.1 + Records Access
+// 🌐 WAPP — Home.tsx (UDoChain Hub principal) v3.0 — Records Enabled
 // =======================================================
 import { useAuth } from "../context/AuthContext";
 import Loader from "../ui/Loader";
@@ -16,7 +16,6 @@ export default function Home() {
   const token = localStorage.getItem("token") || "";
   const email = user?.email || "";
 
-  // 🧭 Módulos principales
   const mainModules = [
     {
       name: "Validate",
@@ -40,7 +39,6 @@ export default function Home() {
     },
   ];
 
-  // ⚙️ Módulos secundarios (incluye Records)
   const extraModules = [
     {
       name: "Verify",
@@ -66,10 +64,8 @@ export default function Home() {
 
   return (
     <div className="min-h-screen flex flex-col bg-udo-bg text-gray-900">
-      {/* 🔹 Header */}
       <Header user={user} />
       <main className="flex-1 container mx-auto px-6 py-12">
-        {/* 🏁 Encabezado */}
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-udo-primary mb-2 notranslate" translate="no">
             UDoChain Hub
@@ -82,7 +78,6 @@ export default function Home() {
           </p>
         </div>
 
-        {/* 🧩 Tarjetas principales */}
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 max-w-6xl mx-auto">
           {mainModules.map((m) => (
             <a
@@ -96,8 +91,7 @@ export default function Home() {
           ))}
         </div>
 
-        {/* 🧩 Tarjetas secundarias */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-4 mt-12 max-w-5xl mx-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-12 max-w-6xl mx-auto">
           {extraModules.map((m) => (
             <a
               key={m.name}
@@ -108,22 +102,6 @@ export default function Home() {
               <p className="text-sm text-gray-600">{m.desc}</p>
             </a>
           ))}
-        </div>
-
-        {/* 🔘 Botones finales */}
-        <div className="flex flex-col sm:flex-row justify-center gap-4 mt-14">
-          <a
-            href={`https://verify.udochain.com/?token=${token}&email=${encodeURIComponent(email)}`}
-            className="bg-udo-primary text-white py-3 px-8 rounded-xl font-medium hover:bg-blue-700 transition"
-          >
-            Verify Certificates
-          </a>
-          <a
-            href={`https://pay.udochain.com/?token=${token}&email=${encodeURIComponent(email)}`}
-            className="bg-white text-udo-primary border border-udo-primary py-3 px-8 rounded-xl font-medium hover:bg-udo-primary hover:text-white transition"
-          >
-            Payment Plans
-          </a>
         </div>
       </main>
       <Footer />
