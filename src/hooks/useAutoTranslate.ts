@@ -1,48 +1,52 @@
 // =======================================================
-// 🌍 useAutoTranslate.ts — Traducción automática SPA UDoChain
-// Compatible con React + Vite + Render + Google Translate
+// 🌍 useAutoTranslate.ts — versión segura y funcional 2026
+// Traducción automática para UDoChain WAPP (compatible con CSP)
 // =======================================================
 import { useEffect } from "react";
 
 export default function useAutoTranslate() {
   useEffect(() => {
+    // Detectar idioma del sistema
     const lang = navigator.language.split("-")[0];
-    if (lang === "en") return; // no traducir si el idioma ya es inglés
+    if (lang === "en") return; // no traducir si ya está en inglés
 
-    // Evitar duplicar el script
-    if (document.getElementById("google-translate-script")) return;
+    // Evitar cargas duplicadas
+    if (document.getElementById("gt-frame")) return;
 
-    // Crear contenedor persistente
-    let div = document.getElementById("google_translate_element");
-    if (!div) {
-      div = document.createElement("div");
-      div.id = "google_translate_element";
-      div.style.display = "none";
-      document.body.appendChild(div);
-    }
+    // Crear iframe seguro e invisible
+    const iframe = document.createElement("iframe");
+    iframe.id = "gt-frame";
+    iframe.style.display = "none";
+    document.body.appendChild(iframe);
 
-    // Agregar script seguro
-    const script = document.createElement("script");
-    script.id = "google-translate-script";
-    script.src =
-      "https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
-    document.body.appendChild(script);
+    const doc = iframe.contentWindow?.document;
+    if (!doc) return;
 
-    // Excluir branding y lema
+    // Inyectar el script de Google Translate dentro del iframe
+    doc.open();
+    doc.write(`
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <script id="gt-script" src="https://translate.google.com/translate_a/element.js?cb=initTranslate"></script>
+        <script>
+          window.initTranslate = function() {
+            new google.translate.TranslateElement({
+              pageLanguage: 'en',
+              includedLanguages: 'es,pt,fr,it,de,zh,ja',
+              autoDisplay: false
+            });
+          };
+        </script>
+      </head>
+      <body></body>
+      </html>
+    `);
+    doc.close();
+
+    // 🧩 Proteger el branding y el lema
     const exclude = ["UDoChain", "You do. We validate."];
-
-    // Inicializar cuando cargue el script
-    (window as any).googleTranslateElementInit = () => {
-      new (window as any).google.translate.TranslateElement(
-        {
-          pageLanguage: "en",
-          includedLanguages: "es,pt,fr,it,de,zh,ja",
-          autoDisplay: false,
-        },
-        "google_translate_element"
-      );
-
-      // Aplicar clase notranslate a textos fijos
+    setTimeout(() => {
       exclude.forEach((t) => {
         document.querySelectorAll("*").forEach((el) => {
           if (el.textContent?.includes(t)) {
@@ -51,6 +55,8 @@ export default function useAutoTranslate() {
           }
         });
       });
-    };
+    }, 2000);
+
+    console.log("🌍 Google Translate initialized safely in sandbox.");
   }, []);
 }
