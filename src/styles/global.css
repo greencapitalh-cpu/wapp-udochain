@@ -9,6 +9,22 @@ body {
 .container {
   @apply max-w-7xl mx-auto;
 }
+
+/* Bloque de subtítulo */
+h2 {
+  @apply font-semibold tracking-tight;
+}
+
+/* Traducción */
 .notranslate {
   translate: none !important;
+}
+
+/* Botones oscuros de My Creations */
+.bg-slate-800 {
+  background-color: #1e293b !important;
+}
+
+.bg-slate-700:hover {
+  background-color: #334155 !important;
 }
